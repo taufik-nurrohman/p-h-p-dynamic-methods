@@ -13,20 +13,26 @@
 
 abstract class PHPDynamicMethods {
 
-    public static $fn = [];
+    protected static $fn = [];
+
+    public static function fn($key, $fn = null) {
+        self::$fn[static::class][$key] = $fn;
+    }
 
     public function __call($key, $arguments = []) {
-        if (isset(self::$fn[$key]) && is_callable(self::$fn[$key])) {
-            return call_user_func_array(Closure::bind(self::$fn[$key], $this), $arguments);
+        $c = static::class;
+        if (isset(self::$fn[$c][$key]) && is_callable(self::$fn[$c][$key])) {
+            return call_user_func_array(Closure::bind(self::$fn[$c][$key], $this), $arguments);
         }
-        exit('Method ' . static::class . '-&gt;' . $key . '() does not exist.');
+        exit('Method ' . $c . '-&gt;' . $key . '() does not exist.');
     }
 
     public static function __callStatic($key, $arguments = []) {
-        if (isset(self::$fn[$key]) && is_callable(self::$fn[$key])) {
-            return call_user_func_array(self::$fn[$key], $arguments);
+        $c = static::class;
+        if (isset(self::$fn[$c][$key]) && is_callable(self::$fn[$c][$key])) {
+            return call_user_func_array(self::$fn[$c][$key], $arguments);
         }
-        exit('Method ' . static::class . '::' . $key . '() does not exist.');
+        exit('Method ' . $c . '::' . $key . '() does not exist.');
     }
 
 }

@@ -28,14 +28,14 @@ MyClass::testStatic(); // Test native static method!
 Adding custom methods:
 
 ~~~ .php
-MyClass::$fn['test2'] = function($value) {
+MyClass::fn('test2', function($value) {
     echo 'Test dynamic method with value: ' . $value . '!';
     var_dump($this);
-};
+});
 
-MyClass::$fn['test2Static'] = function($value) {
+MyClass::fn('test2Static', function($value) {
     echo 'Test dynamic static method with value: ' . $value . '!';
-};
+});
 
 $my_class->test2(100); // Test dynamic method with value: 100!
 MyClass::test2Static(100); // Test dynamic static method with value: 100!
